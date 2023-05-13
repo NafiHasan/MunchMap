@@ -8,7 +8,7 @@ app = create_app()
 
 def view_table(table_name):
     with app.app_context():
-        print(Food.query.all())
+        print(Restaurant.query.all())
 
 
 if __name__ == '__main__':

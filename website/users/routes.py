@@ -5,9 +5,7 @@ from website.models import User, Restaurant
 from website.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                  RequestResetForm, ResetPasswordForm)
 from website.users.utils import save_picture, send_reset_email
-from string import ascii_uppercase
 from flask_login import login_required
-from sqlalchemy import or_
 
 users = Blueprint('users', __name__)
 

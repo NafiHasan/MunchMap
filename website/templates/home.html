@@ -56,8 +56,8 @@
       /* CSS styles */
       body {
         background: #fafafa;
-        color: #333333;
-        margin-top: 5rem;
+        color: #c86a6a;
+        margin-top: 10rem;
       }
       h1,
       h2,
@@ -69,6 +69,7 @@
       }
       .bg-steel {
         background-color: #5f788a;
+        height: 60px;
       }
       .site-header .navbar-nav .nav-link {
         color: #cbd5db;
@@ -97,7 +98,7 @@
         width: 100%;
       }
       .article-title {
-        color: #444444;
+        color: #900909;
       }
       .article-title:hover {
         color: #428bca;
@@ -148,6 +149,7 @@
         gap: 1.5rem;
       }
       .box-container .box {
+        margin-left: 12px;
         padding: 10px;
         background: #fff;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
@@ -156,18 +158,18 @@
         text-align: center;
         /* flex: 1 1 30%; */
         position: relative;
-        min-width: calc(32.2%);
+        min-width: calc(22%);
       }
       .box-container .box img {
-        height: 25rem;
+        height: 20rem;
         object-fit: cover;
         width: 100%;
         border-radius: 0.5rem;
       }
       .box-container .box button.location-tag {
         position: absolute;
-        top: 3rem;
-        left: 3rem;
+        top: 1.5rem;
+        left: 1.5rem;
         background: var(--red);
         color: #fff;
         font-size: 2rem;
@@ -199,6 +201,39 @@
         background-color: lightskyblue;
         color: white;
         animation: btn-animation 0.3s ease-in-out;
+      }
+
+      .search-bar {
+        margin-top: 10px;
+      }
+
+      .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 5px;
+      }
+
+      .search-input {
+        width: 300px; /* Adjust width as needed */
+        height: 40px; /* Adjust height as needed */
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-width: 2px;
+        border-radius: 5px;
+        padding: 5px;
+      }
+
+      .search-button {
+        justify-content: center;
+        background: #ccc;
+        border: 1px solid #ccc;
+        border-width: 2px;
+        border-radius: 4px;
+        cursor: pointer;
+        padding-left: 2px;
+        height: 38px;
+        width: 38px;
       }
 
       @keyframes btn-animation {
@@ -244,7 +279,7 @@
               {% if current_user.is_authenticated %}
               <a
                 class="nav-item nav-link"
-                href="{{ url_for('restaurants.new_post') }}"
+                href="{{ url_for('restaurants.new_restaurant') }}"
                 >Create Restaurant</a
               >
               <a class="nav-item nav-link" href="{{ url_for('users.account') }}"
@@ -267,15 +302,33 @@
           </div>
         </div>
       </nav>
+      <div class="search-container">
+        <form action="/search" method="GET">
+          <input
+            type="text"
+            class="search-input"
+            name="search"
+            placeholder="Search..."
+          />
+          <button type="submit" class="search-button">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
     </header>
     <div class="box-container">
       {% for restaurant in restaurants.items %}
       <div class="box">
         <button class="location-tag">{{ restaurant.location }}</button>
-        <img
-          src="{{ url_for('static', filename='images/' + 'p-2.jpg') }}"
-          alt=""
-        />
+        <a
+          href="{{ url_for('restaurants.restaurant', restaurant_id = restaurant.id ) }}"
+        >
+          <img
+            src="{{ url_for('static', filename='profile_pics/' + restaurant.image_file) }}"
+            alt=""
+          />
+        </a>
+
         <!-- <h3>{{ restaurant.name }}</h3> -->
         <h3>
           <a

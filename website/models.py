@@ -54,7 +54,7 @@ class Restaurant(db.Model):
         'RestaurantReview', backref='review_for', lazy=True)
 
     def __repr__(self):
-        return f"Restaurant('{self.name}', '{self.owner_id}', '{self.location}')"
+        return f"Restaurant('{self.name}', '{self.owner_id}', '{self.location}', '{self.image_file}')"
 
 
 class Food(db.Model):

@@ -247,6 +247,11 @@
               restaurant.owner %}
               <a
                 class="nav-item nav-link"
+                href="{{ url_for('restaurants.update_restaurant', restaurant_id = restaurant.id) }}"
+                >Update Restaurant</a
+              >
+              <a
+                class="nav-item nav-link"
                 href="{{ url_for('foods.new_food', restaurant_id = restaurant.id) }}"
                 >Add Item</a
               >
@@ -277,10 +282,14 @@
       {% for food in foods %}
       <div class="box">
         <button class="location-tag">price</button>
-        <img
-          src="{{ url_for('static', filename='images/' + 'p-2.jpg') }}"
-          alt=""
-        />
+
+        <a href="#">
+          <img
+            src="{{ url_for('static', filename='profile_pics/' + food.image_file) }}"
+            alt=""
+          />
+        </a>
+
         <h3>{{ food.name }}</h3>
         <div class="stars">
           <i class="fas fa-star"></i>
