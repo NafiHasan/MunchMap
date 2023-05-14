@@ -1,43 +1,29 @@
-{% extends "layout.html" %} {% block content %}
-<div class="content-section-container">
-  {% for restaurant in restaurants.items %}
-  <article class="media content-section">
-    <img
-      class="rounded-circle article-img"
-      src="{{ url_for('static', filename='profile_pics/' + restaurant.owner.image_file) }}"
-    />
-    <div class="media-body">
-      <div class="article-metadata">
-        <a
-          class="mr-2"
-          href="{{ url_for('users.user_posts', username=post.author.username) }}"
-          >{{ post.author.username }}</a
-        >
-        <small class="text-muted"
-          >{{ post.date_posted.strftime('%Y-%m-%d') }}</small
-        >
-      </div>
-      <h4>
-        <a
-          class="article-title"
-          href="{{ url_for('posts.post', post_id=post.id) }}"
-          >{{ post.title }}</a
-        >
-      </h4>
-      <p class="article-content">{{ post.content }}</p>
+<div class="reviews">
+  {% for review in food.reviews %}
+  <div class="review">
+    <div class="profile-pic">
+      <img
+        src="{{ url_for('static', filename='profile_pics/' + review.reviewer.image_file) }}"
+        alt="Profile Picture"
+      />
     </div>
-  </article>
+    <div class="review-content">
+      <div class="username">{{ review.reviewer.username }}</div>
+      <div class="rating-stars">
+        {% set filled_stars = 3 %} {% set empty_stars = 2 %} {% for _ in
+        range(filled_stars) %}
+        <span class="filled-star">★</span>
+        {% endfor %} {% for _ in range(empty_stars) %}
+        <span class="empty-star"></span>
+        {% endfor %}
+      </div>
+
+      <h4 style="margin-left: 30px; vertical-align: middle; margin-top: 10px">
+        {{ review.date_posted.strftime('%d-%m-%Y') }}
+      </h4>
+    </div>
+    <div class="review-description">{{ review.description }}</div>
+  </div>
+
   {% endfor %}
 </div>
-{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1,
-right_current=2) %} {% if page_num %} {% if posts.page == page_num %}
-<a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}"
-  >{{ page_num }}</a
->
-{% else %}
-<a
-  class="btn btn-outline-info mb-4"
-  href="{{ url_for('main.home', page=page_num) }}"
-  >{{ page_num }}</a
->
-{% endif %} {% else %} ... {% endif %} {% endfor %} {% endblock content %}

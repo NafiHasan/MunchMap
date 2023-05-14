@@ -98,9 +98,44 @@
     </header>
 
     <div class="restaurant-details">
-      <h1>{{ food.name }}</h1>
-      <p>Restaurant: {{ food.belong_to.name }}</p>
-      <p>Price: 0</p>
+      <div class="text-container">
+        <h1>{{ food.name }}</h1>
+        <p>Restaurant: {{ food.belong_to.name }}</p>
+        <p>Price: {{ food.price }}</p>
+        {% if food.rating_count > 0 %}
+        <p>
+          Rating : {{ (food.total_rating/food.rating_count) | round(1) }} / 5
+        </p>
+        {% else %}
+        <p>Rating : 0</p>
+        {% endif %}
+
+        <div>
+          {% if current_user.is_authenticated %} {% if food.belong_to.owner ==
+          current_user %}
+          <a
+            href="{{ url_for('foods.update_food', food_id = food.id) }}"
+            class="btn"
+          >
+            Update Item
+          </a>
+          <a
+            href="{{ url_for('foods.delete_food', food_id = food.id) }}"
+            class="delete-btn"
+            style="margin-left: 10px; text-decoration: none"
+          >
+            Delete Item
+          </a>
+          {% endif %} {% endif %}
+        </div>
+      </div>
+      <div class="cover-image-container">
+        <img
+          class="cut-image"
+          src="{{ url_for('static', filename='profile_pics/' + food.image_file) }}"
+          alt="Food Image"
+        />
+      </div>
     </div>
 
     <div class="row">
@@ -125,6 +160,16 @@
       </div>
     </div>
 
+    <div class="border-bottom pt-1">
+      <text
+        class="text-muted"
+        ,
+        style="margin-left: 20px; margin-bottom: 20px; font-size: large"
+      >
+        Reviews
+      </text>
+    </div>
+    {% set show = true %}
     <div class="reviews">
       {% for review in food.reviews %}
       <div class="review">
@@ -135,15 +180,39 @@
           />
         </div>
         <div class="review-content">
+          {% if review.reviewer == current_user %}
+          <div class="username" style="color: blueviolet">
+            {{ review.reviewer.username }} (me)
+          </div>
+          {% set show = false %} {% else %}
           <div class="username">{{ review.reviewer.username }}</div>
-          {{ review.date_posted.strftime('%d-%m-%Y') }}
-          <br />
-          <div><p>{{ review.description }}</p></div>
+          {% endif %}
+          <div class="rating-stars">
+            {% set filled_stars = review.rating %} {% set empty_stars = 5 -
+            review.rating %} {% for _ in range(filled_stars) %}
+            <span class="filled-star">★</span>
+            {% endfor %} {% for _ in range(empty_stars) %}
+            <span class="empty-star"></span>
+            {% endfor %}
+          </div>
+
+          <h4
+            style="
+              margin-left: 30px;
+              vertical-align: middle;
+              margin-top: 10px;
+              margin-bottom: 20px;
+            "
+          >
+            {{ review.date_posted.strftime('%d-%m-%Y') }}
+          </h4>
+
+          <div class="review-description"><p>{{ review.description }}</p></div>
         </div>
       </div>
       {% endfor %}
     </div>
-
+    {% if show == true %}
     <div class="section">
       <div class="image-container">
         <img
@@ -160,6 +229,23 @@
             name="review-text"
             placeholder="Write your review here..."
           ></textarea>
+
+          <fieldset class="star-rating">
+            <legend>Rate the food:</legend>
+            <div class="stars">
+              <input type="radio" id="star1" name="rating" value="1" required />
+              <label for="star1">★</label>
+              <input type="radio" id="star2" name="rating" value="2" required />
+              <label for="star2">★</label>
+              <input type="radio" id="star3" name="rating" value="3" required />
+              <label for="star3">★</label>
+              <input type="radio" id="star4" name="rating" value="4" required />
+              <label for="star4">★</label>
+              <input type="radio" id="star5" name="rating" value="5" required />
+              <label for="star5">★</label>
+            </div>
+          </fieldset>
+
           <input type="hidden" name="food_id" value="{{ food.id }}" />
           <input
             type="hidden"
@@ -170,5 +256,6 @@
         </form>
       </div>
     </div>
+    {% endif %}
   </body>
 </html>

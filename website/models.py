@@ -52,6 +52,8 @@ class Restaurant(db.Model):
     foods = db.relationship('Food', backref='belong_to', lazy=True)
     reviews = db.relationship(
         'RestaurantReview', backref='review_for', lazy=True)
+    rating_count = db.Column(db.Float, nullable=False, default=0.0)
+    total_rating = db.Column(db.Float, nullable=False, default=0.0)
 
     def __repr__(self):
         return f"Restaurant('{self.name}', '{self.owner_id}', '{self.location}', '{self.image_file}')"
@@ -67,6 +69,9 @@ class Food(db.Model):
     rating = db.Column(db.Float, default=0.0)
     description = db.Column(db.Text, nullable=False, default='No description')
     reviews = db.relationship('FoodReview', backref='review_for', lazy=True)
+    rating_count = db.Column(db.Float, nullable=False, default=0.0)
+    total_rating = db.Column(db.Float, nullable=False, default=0.0)
+    price = db.Column(db.Float, nullable=False, default=0.0)
 
     def __repr__(self):
         return f"Food('{self.name}', '{self.restaurant_id}')"
@@ -81,6 +86,7 @@ class RestaurantReview(db.Model):
     description = db.Column(db.Text)
     date_posted = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)
+    rating = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return f"RestaurantReview('{self.restaurant_id}', '{self.reviewer_id}')"
@@ -95,6 +101,7 @@ class FoodReview(db.Model):
     description = db.Column(db.Text)
     date_posted = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)
+    rating = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return f"FoodReview('{self.food_id}', '{self.reviewer_id}')"

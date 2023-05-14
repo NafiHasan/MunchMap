@@ -76,16 +76,6 @@ def account():
                            image_file=image_file, form=form)
 
 
-@users.route("/user/<string:username>")
-def user_posts(username):
-    page = request.args.get('page', 1, type=int)
-    user = User.query.filter_by(username=username).first_or_404()
-    restaurants = Restaurant.query.filter_by(owner=user)\
-        .order_by(Restaurant.name)\
-        .paginate(page=page, per_page=9)
-    return render_template('user_posts.html', restaurants=restaurants, user=user)
-
-
 @users.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:

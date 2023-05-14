@@ -31,12 +31,6 @@ h6 {
   color: #444444;
 }
 
-a {
-  color: black;
-  font-size: large;
-  font-weight: 1000;
-}
-
 .bg-steel {
   background-color: #066d89;
   height: 80px;
@@ -88,7 +82,6 @@ a {
   height: 300px;
   width: 100%;
 }
-
 .box-container {
   margin-top: 50px;
   margin-left: 10px;
@@ -98,57 +91,72 @@ a {
   gap: 1.5rem;
 }
 .box-container .box {
-  margin-left: 12px;
+  margin-left: 20px;
+  margin-bottom: 20px;
   padding: 10px;
   background: #fff;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-  border: 0.1rem solid rgba(0, 0, 0, 0.3);
-  border-radius: 0.5rem;
+  border: 0.2rem solid rgba(26, 1, 1, 0.3);
+  border-radius: 0.7rem;
   text-align: center;
   /* flex: 1 1 30%; */
   position: relative;
   min-width: calc(22%);
+  max-width: calc(22%);
+  max-height: 330px;
 }
 .box-container .box img {
+  border: 1px solid rgb(194, 190, 190);
   height: 20rem;
   object-fit: cover;
   width: 100%;
   border-radius: 0.5rem;
-  /* background-size: cover; */
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
 }
-
 .box-container .box img:hover {
   transform: scale(1.05);
 }
-
 .box-container .box button.location-tag {
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
-  background: var(--red);
+  background: #10874d;
   color: #fff;
-  font-size: 2rem;
+  font-size: 1.5rem;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
   z-index: 1;
 }
 .box-container .box h3 {
-  color: #333;
-  font-size: 2.5rem;
+  color: #000000;
+  font-size: 2rem;
+  font-weight: 500;
   padding-top: 1rem;
   transition: transform 0.3s ease;
 }
 .box-container .box h3:hover {
   transform: scale(1.1);
 }
-
 .box-container .box .stars i {
   color: gold;
   font-size: 1.7rem;
   padding: 1rem 0.1rem;
 }
+
+.box-container .box button.location-tag {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: #10874d;
+  color: #fff;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  z-index: 1;
+}
+
 .btn {
   display: inline-block;
   padding: 10px 20px;
@@ -216,12 +224,17 @@ a {
 }
 
 .restaurant-details {
+  display: flex;
   background-color: #cbd5db;
-  text-align: center;
+  /* text-align: center; */
   margin-top: 80px;
   width: 100%;
   /*      max-width: 800px;*/
-  padding: 20px;
+  padding-right: 40px;
+  padding-left: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  height: 240px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
@@ -230,7 +243,8 @@ h1 {
   font-family: Arial, sans-serif;
   color: #333;
   margin-bottom: 10px;
-  scale: 1.3;
+  font-size: 35px;
+  font-weight: 700;
 }
 
 p {
@@ -243,4 +257,26 @@ p {
   margin-left: 100px;
   width: 1000px;
   font-size: large;
+}
+
+.text-container {
+  flex-grow: 1;
+}
+
+.image-container {
+  margin-right: 20px;
+  border: 1px solid rgb(164, 163, 163);
+  height: 200px;
+  width: fit-content;
+  border-radius: 15px;
+  background-color: #919aa9;
+  margin-bottom: 20px;
+}
+
+.cut-image {
+  padding: 5px;
+  /* margin-right: 20px; */
+  /* border: 1px solid black; */
+  height: 200px;
+  border-radius: 15px;
 }

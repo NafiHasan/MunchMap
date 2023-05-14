@@ -12,7 +12,7 @@ class PostForm(FlaskForm):
     detail_location = TextAreaField(
         'Detail Location', validators=[DataRequired()])
     picture = FileField('Add restaurant\'s image', validators=[
-                        FileAllowed(['jpg', 'png'])])
+                        FileAllowed(['jpg', 'png', 'jpeg', 'webp'])])
     submit = SubmitField('Create')
 
 
@@ -24,5 +24,5 @@ class UpdateForm(FlaskForm):
     detail_location = TextAreaField(
         'Detail Location', validators=[DataRequired()])
     picture = FileField('Add restaurant\'s image', validators=[
-                        FileAllowed(['jpg', 'png'])])
+                        FileAllowed(['jpg', 'png', 'jpeg', 'webp'])])
     submit = SubmitField('update')
