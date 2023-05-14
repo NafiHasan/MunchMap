@@ -9,7 +9,7 @@ main = Blueprint('main', __name__)
 def home():
     page = request.args.get('page', 1, type=int)
     restaurants = Restaurant.query.order_by(
-        Restaurant.name).paginate(page=page, per_page=9)
+        Restaurant.name).paginate(page=page, per_page=12)
     return render_template('home.html', restaurants=restaurants)
 
 

@@ -18,6 +18,13 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='restaurant.css') }}"
+    />
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -35,186 +42,6 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap");
-      * {
-        font-family: "Nunito", sans-serif;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        outline: none;
-        border: none;
-        text-decoration: none;
-        /* text-transform: capitalize; */
-        transition: all 0.2s linear;
-      }
-      html {
-        font-size: 62.5%;
-        overflow-x: hidden;
-        scroll-behavior: smooth;
-        scroll-padding-top: 6rem;
-      }
-      /* CSS styles */
-      body {
-        background: #fafafa;
-        color: #333333;
-        margin-top: 5rem;
-      }
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        color: #444444;
-      }
-      .bg-steel {
-        background-color: #5f788a;
-      }
-      .site-header .navbar-nav .nav-link {
-        color: #cbd5db;
-        font-size: medium;
-      }
-      .site-header .navbar-nav .nav-link:hover {
-        color: #ffffff;
-      }
-      .site-header .navbar-nav .nav-link.active {
-        font-weight: 500;
-      }
-      .content-section-container {
-        display: grid;
-        grid-template-columns: repeat(
-          3,
-          1fr
-        ); /* Adjust the number of columns as needed */
-        grid-gap: 20px; /* Adjust the gap between grid items */
-      }
-      .content-section {
-        background: #ffffff;
-        padding: 10px;
-        border: 1px solid #dddddd;
-        border-radius: 3px;
-        height: 300px;
-        width: 100%;
-      }
-      .article-title {
-        color: #444444;
-      }
-      .article-title:hover {
-        color: #428bca;
-        text-decoration: none;
-      }
-      .article-content {
-        white-space: pre-line;
-      }
-      .article-img {
-        height: 65px;
-        width: 65px;
-        margin-right: 16px;
-      }
-      .article-metadata {
-        padding-bottom: 10px;
-        margin-bottom: 4px;
-        border-bottom: 1px solid #e3e3e3;
-      }
-      .article-metadata:hover {
-        color: #333;
-        text-decoration: none;
-      }
-      .article-svg {
-        width: 25px;
-        height: 25px;
-        vertical-align: middle;
-      }
-      .account-img {
-        height: 125px;
-        width: 125px;
-        margin-right: 20px;
-        margin-bottom: 16px;
-      }
-      .account-heading {
-        font-size: 2.5rem;
-      }
-      .grid-item {
-        background-color: #f2f2f2;
-        padding: 20px;
-        text-align: center;
-      }
-      .box-container {
-        /* margin-top: 150px; */
-        /* padding-top: 20px; */
-        margin-left: 70px;
-        /* margin-right: 10px; */
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-      }
-      .box-container .box {
-        padding: 10px;
-        background: #fff;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-        border: 0.1rem solid rgba(0, 0, 0, 0.3);
-        border-radius: 0.5rem;
-        text-align: center;
-        position: relative;
-        min-width: calc(30.2%);
-      }
-      .box-container .box img {
-        padding-top: 20px;
-        height: 25rem;
-        object-fit: cover;
-        width: 90%;
-        border-radius: 0.5rem;
-      }
-      .box-container .box button.location-tag {
-        position: absolute;
-        top: 3rem;
-        left: 3rem;
-        background: var(--red);
-        color: #fff;
-        font-size: 2rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        cursor: pointer;
-      }
-      .box-container .box h3 {
-        color: #333;
-        font-size: 2.5rem;
-        padding-top: 1rem;
-      }
-      .box-container .box .stars i {
-        color: gold;
-        font-size: 1.7rem;
-        padding: 1rem 0.1rem;
-      }
-      .btn {
-        background-color: gray;
-        border-radius: 5px;
-        border: 2px;
-        border-color: black;
-        color: black;
-        padding: 10px 20px;
-        transition: background-color 0.3s ease-in-out;
-      }
-
-      .btn:hover {
-        background-color: lightskyblue;
-        color: white;
-        animation: btn-animation 0.3s ease-in-out;
-      }
-
-      @keyframes btn-animation {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-    </style>
   </head>
   <body>
     <header class="site-header">
@@ -277,25 +104,56 @@
         </div>
       </nav>
     </header>
+
+    <div class="restaurant-details">
+      <h1>{{restaurant.name}}</h1>
+      <p>Address: {{restaurant.detail_location}}</p>
+      <p>Zone: {{restaurant.location}}</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <div
+          class="alert alert-{{ category }} custom-alert alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+      </div>
+    </div>
+
     <div class="box-container">
       <!-- <p>{{ foods }}</p> -->
       {% for food in foods %}
       <div class="box">
         <button class="location-tag">price</button>
 
-        <a href="#">
+        <a href="{{ url_for('foods.food', food_id = food.id) }}">
           <img
             src="{{ url_for('static', filename='profile_pics/' + food.image_file) }}"
             alt=""
           />
         </a>
+        <a
+          href="{{ url_for('foods.food', food_id = food.id) }}"
+          style="text-decoration: none"
+          ><h3>{{ food.name }}</h3></a
+        >
 
-        <h3>{{ food.name }}</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-        <a href="#" class="btn"> Add Review </a>
+        <a href="{{ url_for('foods.food', food_id = food.id) }}" class="btn">
+          Add Review
+        </a>
       </div>
       {% endfor %}
     </div>

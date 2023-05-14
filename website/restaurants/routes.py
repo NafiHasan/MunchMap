@@ -17,7 +17,9 @@ def new_restaurant():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
-            # current_user.image_file = picture_file
+
+        else:
+            picture_file = 'default.jpg'
 
         restaurant = Restaurant(name=form.name.data,
                                 description=form.description.data, owner=current_user, location=form.location.data, detail_location=form.detail_location.data, rating=0, image_file=picture_file)
@@ -34,6 +36,7 @@ def new_restaurant():
 @restaurants.route("/restaurant/<int:restaurant_id>")
 def restaurant(restaurant_id):
     restaurant = Restaurant.query.get_or_404(restaurant_id)
+
     # print(restaurant.foods)
     return render_template('restaurant.html', title=restaurant.name, foods=restaurant.foods, restaurant=restaurant)
 
