@@ -103,7 +103,7 @@ h6 {
   position: relative;
   min-width: calc(22%);
   max-width: calc(22%);
-  max-height: 330px;
+  max-height: 360px;
 }
 .box-container .box img {
   border: 1px solid rgb(194, 190, 190);

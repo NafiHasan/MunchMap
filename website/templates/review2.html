@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-  <title>{{ title }}</title>
   <head>
     <meta charset="utf-8" />
     <meta
@@ -22,7 +21,7 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ url_for('static', filename='restaurant.css') }}"
+      href="{{ url_for('static', filename='review.css') }}"
     />
 
     <!-- Optional JavaScript -->
@@ -70,31 +69,12 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              {% if current_user.is_authenticated %} {% if current_user ==
-              restaurant.owner %}
+              {% if current_user.is_authenticated %}
               <a
                 class="nav-item nav-link"
-                href="{{ url_for('restaurants.update_restaurant', restaurant_id = restaurant.id) }}"
-                >Update Restaurant</a
+                href="{{ url_for('restaurants.new_restaurant') }}"
+                >Create Restaurant</a
               >
-              <a
-                class="nav-item nav-link"
-                href="{{ url_for('foods.new_food', restaurant_id = restaurant.id) }}"
-                >Add Item</a
-              >
-              <a
-                class="nav-item nav-link"
-                href="{{ url_for('restaurants.review_restaurant', restaurant_id = restaurant.id) }}"
-                >See Reviews</a
-              >
-
-              {% else %}
-              <a
-                class="nav-item nav-link"
-                href="{{ url_for('restaurants.review_restaurant', restaurant_id = restaurant.id) }}"
-                >See Reviews</a
-              >
-              {% endif %}
               <a class="nav-item nav-link" href="{{ url_for('users.account') }}"
                 >{{ current_user.username }}</a
               >
@@ -125,17 +105,17 @@
         {% if restaurant.rating_count > 0 %}
         <p>
           Rating : {{ (restaurant.total_rating/restaurant.rating_count) |
-          round(1) }} / 5.0
+          round(1) }} / 5
         </p>
         {% else %}
-        <p>Rating : 0 / 5.0</p>
+        <p>Rating : 0 / 5</p>
         {% endif %}
       </div>
-      <div class="image-container">
+      <div class="cover-image-container">
         <img
           class="cut-image"
           src="{{ url_for('static', filename='profile_pics/' + restaurant.image_file) }}"
-          alt="Restaurant Image"
+          alt="Rest Image"
         />
       </div>
     </div>
@@ -162,38 +142,107 @@
       </div>
     </div>
 
-    <div class="box-container">
-      <!-- <p>{{ foods }}</p> -->
-      {% for food in foods %}
-      <div class="box">
-        <button class="location-tag">{{food.belong_to.location}}</button>
-
-        <a href="{{ url_for('foods.food', food_id = food.id) }}">
+    <div class="border-bottom pt-1">
+      <text
+        class="text-muted"
+        ,
+        style="margin-left: 20px; margin-bottom: 20px; font-size: large"
+      >
+        Reviews
+      </text>
+    </div>
+    {% set flag = [] %}
+    <div class="reviews">
+      {% for review in restaurant.reviews %}
+      <div class="review">
+        <div class="profile-pic">
           <img
-            src="{{ url_for('static', filename='profile_pics/' + food.image_file) }}"
-            alt=""
+            src="{{ url_for('static', filename='profile_pics/' + review.reviewer.image_file) }}"
+            alt="Profile Picture"
           />
-        </a>
-        <a
-          href="{{ url_for('foods.food', food_id = food.id) }}"
-          style="text-decoration: none; display: inline block"
-          ><h3>{{ food.name }}</h3>
-        </a>
-        <div class="text" style="font-size: medium; display: flex">
-          <div class="text2" style="margin-right: 20px; margin-left: 10px">
-            Price : {{food.price}}
-          </div>
-          <div>
-            {% if food.rating_count > 0 %} Rating : {{
-            (food.total_rating/food.rating_count) | round(1) }} / 5 {% else %}
-            Rating : 0 / 5 {% endif %}
-          </div>
         </div>
-        <a href="{{ url_for('foods.food', food_id = food.id) }}" class="btn">
-          Add Review
-        </a>
+        <div class="review-content">
+          {% if review.reviewer == current_user %}
+          <div class="username" style="color: blueviolet">
+            {% set temp = flag.append(TRUE) %} {{ review.reviewer.username }}
+            (me)
+          </div>
+          {% else %}
+          <div class="username">{{ review.reviewer.username }}</div>
+          {% endif %}
+          <div class="rating-stars">
+            {% set filled_stars = review.rating %} {% set empty_stars = 5 -
+            review.rating %} {% for _ in range(filled_stars) %}
+            <span class="filled-star">★</span>
+            {% endfor %} {% for _ in range(empty_stars) %}
+            <span class="empty-star"></span>
+            {% endfor %}
+          </div>
+
+          <h4
+            style="
+              margin-left: 30px;
+              vertical-align: middle;
+              margin-top: 10px;
+              margin-bottom: 20px;
+            "
+          >
+            {{ review.date_posted.strftime('%d-%m-%Y') }}
+          </h4>
+
+          <div class="review-description"><p>{{ review.description }}</p></div>
+        </div>
       </div>
       {% endfor %}
     </div>
+    {% if flag | length == 0 %} {% if current_user.is_authenticated %}
+    <div class="section">
+      <div class="image-container">
+        <img
+          class="own-profile-pic"
+          src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"
+          alt="Profile Picture"
+        />
+      </div>
+      <div class="content-container">
+        <form action="/add-restaurant-review" method="POST">
+          <textarea
+            class="form-text"
+            id="review-text"
+            name="review-text"
+            placeholder="Write your review here..."
+          ></textarea>
+
+          <fieldset class="star-rating">
+            <legend>Rate the restaurant:</legend>
+            <div class="stars">
+              <input type="radio" id="star1" name="rating" value="1" required />
+              <label for="star1">★</label>
+              <input type="radio" id="star2" name="rating" value="2" required />
+              <label for="star2">★</label>
+              <input type="radio" id="star3" name="rating" value="3" required />
+              <label for="star3">★</label>
+              <input type="radio" id="star4" name="rating" value="4" required />
+              <label for="star4">★</label>
+              <input type="radio" id="star5" name="rating" value="5" required />
+              <label for="star5">★</label>
+            </div>
+          </fieldset>
+
+          <input
+            type="hidden"
+            name="restaurant_id"
+            value="{{ restaurant.id }}"
+          />
+          <input
+            type="hidden"
+            name="reviewer_id"
+            value="{{ current_user.id }}"
+          />
+          <button class="form-button" type="submit">Submit Review</button>
+        </form>
+      </div>
+    </div>
+    {% endif %} {% endif %}
   </body>
 </html>

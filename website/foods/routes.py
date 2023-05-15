@@ -78,6 +78,10 @@ def add_food_review():
 
         food.total_rating = food.total_rating - float(rating) + 6.0
         food.rating_count = food.rating_count + 1
+
+        if food.rating_count > 0:
+            food.rating = (food.total_rating/food.rating_count)
+
         print(food.name, food.total_rating, food.rating_count)
         db.session.commit()
 

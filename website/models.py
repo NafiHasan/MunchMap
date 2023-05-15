@@ -54,6 +54,7 @@ class Restaurant(db.Model):
         'RestaurantReview', backref='review_for', lazy=True)
     rating_count = db.Column(db.Float, nullable=False, default=0.0)
     total_rating = db.Column(db.Float, nullable=False, default=0.0)
+    ratign = db.Column(db.Float, nullable=False, default=0.0)
 
     def __repr__(self):
         return f"Restaurant('{self.name}', '{self.owner_id}', '{self.location}', '{self.image_file}')"
@@ -71,6 +72,7 @@ class Food(db.Model):
     reviews = db.relationship('FoodReview', backref='review_for', lazy=True)
     rating_count = db.Column(db.Float, nullable=False, default=0.0)
     total_rating = db.Column(db.Float, nullable=False, default=0.0)
+    rating = db.Column(db.Float, nullable=False, default=0.0)
     price = db.Column(db.Float, nullable=False, default=0.0)
 
     def __repr__(self):
@@ -94,8 +96,7 @@ class RestaurantReview(db.Model):
 
 class FoodReview(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    food_id = db.Column(db.Integer, db.ForeignKey(
-        'food.id'), nullable=False)
+    food_id = db.Column(db.Integer, db.ForeignKey('food.id'), nullable=False)
     reviewer_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'), nullable=False)
     description = db.Column(db.Text)

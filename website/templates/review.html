@@ -63,8 +63,8 @@
               <a class="nav-item nav-link" href="{{ url_for('main.home') }}"
                 >Home</a
               >
-              <a class="nav-item nav-link" href="{{ url_for('main.about') }}"
-                >About</a
+              <a class="nav-item nav-link" href="{{ url_for('main.home2') }}"
+                >Foods</a
               >
             </div>
             <!-- Navbar Right Side -->
@@ -107,7 +107,7 @@
           Rating : {{ (food.total_rating/food.rating_count) | round(1) }} / 5
         </p>
         {% else %}
-        <p>Rating : 0</p>
+        <p>Rating : 0 / 5</p>
         {% endif %}
 
         <div>
@@ -169,7 +169,7 @@
         Reviews
       </text>
     </div>
-    {% set show = true %}
+    {% set flag = [] %}
     <div class="reviews">
       {% for review in food.reviews %}
       <div class="review">
@@ -182,9 +182,10 @@
         <div class="review-content">
           {% if review.reviewer == current_user %}
           <div class="username" style="color: blueviolet">
-            {{ review.reviewer.username }} (me)
+            {% set temp = flag.append(TRUE) %} {{ review.reviewer.username }}
+            (me)
           </div>
-          {% set show = false %} {% else %}
+          {% else %}
           <div class="username">{{ review.reviewer.username }}</div>
           {% endif %}
           <div class="rating-stars">
@@ -212,7 +213,7 @@
       </div>
       {% endfor %}
     </div>
-    {% if show == true %}
+    {% if flag | length == 0 %} {% if current_user.is_authenticated %}
     <div class="section">
       <div class="image-container">
         <img
@@ -256,6 +257,6 @@
         </form>
       </div>
     </div>
-    {% endif %}
+    {% endif %} {% endif %}
   </body>
 </html>

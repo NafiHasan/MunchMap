@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <title>{{ title }}</title>
   <head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -22,9 +22,8 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ url_for('static', filename='restaurant.css') }}"
+      href="{{ url_for('static', filename='home.css') }}"
     />
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -42,12 +41,28 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      var prevScrollPos = window.pageYOffset;
+
+      window.onscroll = function () {
+        var currentScrollPos = window.pageYOffset;
+
+        if (prevScrollPos > currentScrollPos) {
+          document.querySelector(".header").classList.remove("slide-up");
+        } else {
+          document.querySelector(".header").classList.add("slide-up");
+        }
+
+        prevScrollPos = currentScrollPos;
+      };
+    </script>
   </head>
   <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-8" href="/">MunchMap</a>
+          <h1><a class="navbar-brand mr-8" href="/">MunchMap</a></h1>
           <button
             class="navbar-toggler"
             type="button"
@@ -70,31 +85,12 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              {% if current_user.is_authenticated %} {% if current_user ==
-              restaurant.owner %}
+              {% if current_user.is_authenticated %}
               <a
                 class="nav-item nav-link"
-                href="{{ url_for('restaurants.update_restaurant', restaurant_id = restaurant.id) }}"
-                >Update Restaurant</a
+                href="{{ url_for('restaurants.new_restaurant') }}"
+                >Create Restaurant</a
               >
-              <a
-                class="nav-item nav-link"
-                href="{{ url_for('foods.new_food', restaurant_id = restaurant.id) }}"
-                >Add Item</a
-              >
-              <a
-                class="nav-item nav-link"
-                href="{{ url_for('restaurants.review_restaurant', restaurant_id = restaurant.id) }}"
-                >See Reviews</a
-              >
-
-              {% else %}
-              <a
-                class="nav-item nav-link"
-                href="{{ url_for('restaurants.review_restaurant', restaurant_id = restaurant.id) }}"
-                >See Reviews</a
-              >
-              {% endif %}
               <a class="nav-item nav-link" href="{{ url_for('users.account') }}"
                 >{{ current_user.username }}</a
               >
@@ -115,70 +111,64 @@
           </div>
         </div>
       </nav>
+      <div class="row">
+        <div class="col-md-10">
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %}
+          <div
+            class="alert alert-{{ category }} custom-alert alert-dismissible fade show"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock
+          %}
+        </div>
+      </div>
+      <div class="search-container">
+        <form action="/search_food" method="GET">
+          <input
+            type="text"
+            class="search-input"
+            name="search"
+            placeholder="Search..."
+          />
+          <button type="submit" class="search-button">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
     </header>
 
-    <div class="restaurant-details">
-      <div class="text-container">
-        <h1>{{ restaurant.name }}</h1>
-        <p>Address: {{ restaurant.detail_location }}</p>
-        <p>Zone: {{ restaurant.location }}</p>
-        {% if restaurant.rating_count > 0 %}
-        <p>
-          Rating : {{ (restaurant.total_rating/restaurant.rating_count) |
-          round(1) }} / 5.0
-        </p>
-        {% else %}
-        <p>Rating : 0 / 5.0</p>
-        {% endif %}
-      </div>
-      <div class="image-container">
-        <img
-          class="cut-image"
-          src="{{ url_for('static', filename='profile_pics/' + restaurant.image_file) }}"
-          alt="Restaurant Image"
-        />
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-10">
-        {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %} {% for category, message in messages %}
-        <div
-          class="alert alert-{{ category }} custom-alert alert-dismissible fade show"
-          role="alert"
-        >
-          {{ message }}
-          <button
-            type="button"
-            class="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
-      </div>
-    </div>
-
     <div class="box-container">
-      <!-- <p>{{ foods }}</p> -->
-      {% for food in foods %}
+      {% for food in foods.items %}
       <div class="box">
-        <button class="location-tag">{{food.belong_to.location}}</button>
-
-        <a href="{{ url_for('foods.food', food_id = food.id) }}">
+        <button class="location-tag">{{ food.belong_to.location }}</button>
+        <a href="{{ url_for('foods.food', food_id = food.id ) }}">
           <img
             src="{{ url_for('static', filename='profile_pics/' + food.image_file) }}"
             alt=""
           />
         </a>
-        <a
-          href="{{ url_for('foods.food', food_id = food.id) }}"
-          style="text-decoration: none; display: inline block"
-          ><h3>{{ food.name }}</h3>
-        </a>
+
+        <h3>
+          <a
+            href="{{ url_for('foods.food', food_id = food.id ) }}"
+            style="text-decoration: none"
+            >{{ food.name }}
+          </a>
+          <p style="font-size: small; color: rgb(193, 23, 227)">
+            {{ food.belong_to.name }}
+          </p>
+        </h3>
         <div class="text" style="font-size: medium; display: flex">
           <div class="text2" style="margin-right: 20px; margin-left: 10px">
             Price : {{food.price}}
@@ -189,11 +179,36 @@
             Rating : 0 / 5 {% endif %}
           </div>
         </div>
-        <a href="{{ url_for('foods.food', food_id = food.id) }}" class="btn">
-          Add Review
+        <a href="{{ url_for('foods.food', food_id = food.id ) }}" class="btn">
+          See Reviews
         </a>
       </div>
       {% endfor %}
     </div>
+
+    {% for page_num in foods.iter_pages(left_edge=1, right_edge=1,
+    left_current=1, right_current=2) %} {% if page_num %} {% if foods.page ==
+    page_num %}
+    <a
+      class="btn btn-info mb-4"
+      style="margin-left: 500px; margin-top: 30px; margin-bottom: 80px"
+      href="{{ url_for('main.home2', page=page_num) }}"
+      >{{ page_num }}</a
+    >
+    {% else %}
+    <a
+      class="btn btn-outline-info mb-4"
+      href="{{ url_for('main.home2', page=page_num) }}"
+      >{{ page_num }}</a
+    >
+    {% endif %} {% else %} ... {% endif %} {% endfor %}
   </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    // Automatically close alerts after 5 seconds
+    setTimeout(function () {
+      $(".alert").alert("close");
+    }, 5000);
+  </script>
 </html>

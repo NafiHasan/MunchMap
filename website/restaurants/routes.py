@@ -2,7 +2,7 @@ from flask import (Blueprint, render_template, url_for, flash,
                    redirect, request, abort)
 from flask_login import current_user, login_required
 from website import db
-from website.models import Restaurant
+from website.models import Restaurant, RestaurantReview
 from website.users.utils import save_picture
 from website.restaurants.forms import PostForm, UpdateForm
 from website import foods
@@ -36,9 +36,17 @@ def new_restaurant():
 @restaurants.route("/restaurant/<int:restaurant_id>")
 def restaurant(restaurant_id):
     restaurant = Restaurant.query.get_or_404(restaurant_id)
+    foods = restaurant.foods
+
+    foods = sorted(
+        foods,
+        key=lambda x: (x.total_rating /
+                       x.rating_count) if x.rating_count != 0 else 0,
+        reverse=True
+    )
 
     # print(restaurant.foods)
-    return render_template('restaurant.html', title=restaurant.name, foods=restaurant.foods, restaurant=restaurant)
+    return render_template('restaurant.html', title=restaurant.name, foods=foods, restaurant=restaurant)
 
 
 @restaurants.route("/restaurant/<int:restaurant_id>/update", methods=['GET', 'POST'])
@@ -80,3 +88,55 @@ def update_restaurant(restaurant_id):
 #     db.session.commit()
 #     flash('Your post has been deleted!', 'success')
 #     return redirect(url_for('main.home'))
+
+
+@restaurants.route("/review/<int:restaurant_id>")
+def review_restaurant(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    reviews = RestaurantReview.query.filter_by(restaurant_id=restaurant_id).order_by(
+        RestaurantReview.date_posted.desc()).all()
+    return render_template('review2.html', restaurant=restaurant, reviews=reviews)
+
+
+@restaurants.route('/add-restaurant-review', methods=['GET', 'POST'])
+def add_restaurant_review():
+    if request.method == 'POST':
+        review_text = request.form.get('review-text')
+        restaurant_id = request.form.get('restaurant_id')
+        reviewer_id = request.form.get('reviewer_id')
+
+        print(review_text, reviewer_id)
+
+        reviews = RestaurantReview.query.filter_by(restaurant_id=restaurant_id).order_by(
+            RestaurantReview.date_posted.desc()).all()
+        # print(review_text, reviewer_id)
+        rating = request.form.get('rating')
+        print(review_text, rating)
+
+        new_review = RestaurantReview(
+            restaurant_id=restaurant_id, reviewer_id=reviewer_id, description=review_text, rating=(6 - int(rating)))
+        db.session.add(new_review)
+        db.session.commit()
+        restaurant = Restaurant.query.get(restaurant_id)
+
+        restaurant.total_rating = restaurant.total_rating - float(rating) + 6.0
+        restaurant.rating_count = restaurant.rating_count + 1
+
+        if restaurant.rating_count > 0:
+            restaurant.rating = (restaurant.total_rating /
+                                 restaurant.rating_count)
+
+        # print(food.name, food.total_rating, food.rating_count)
+        db.session.commit()
+
+        flash('Your review has been added. Thank You!', 'success')
+        return redirect(url_for('restaurants.review_restaurant', restaurant_id=restaurant_id))
+
+    else:
+        review_text = request.form.get('review-text')
+        restaurant_id = request.form.get('restaurant_id')
+        reviewer_id = request.form.get('reviewer_id')
+        reviews = RestaurantReview.query.filter_by(restaurant_id=restaurant_id).order_by(
+            RestaurantReview.date_posted.desc()).all()
+        restaurant = Restaurant.query.get(restaurant_id)
+        return redirect(url_for('restaurants.review_restaurant', restaurant_id=restaurant_id))
