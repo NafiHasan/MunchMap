@@ -140,3 +140,13 @@ def add_restaurant_review():
             RestaurantReview.date_posted.desc()).all()
         restaurant = Restaurant.query.get(restaurant_id)
         return redirect(url_for('restaurants.review_restaurant', restaurant_id=restaurant_id))
+
+
+@restaurants.route("/restaurant/search-by-location/<string:location>")
+def search_by_location(location):
+    page = request.args.get('page', 1, type=int)
+    # restaurants = Restaurant.query.order_by(
+    # Restaurant.rating.desc()).paginate(page=page, per_page=12)
+    restaurants = Restaurant.query.filter_by(
+        location=location).paginate(page=page, per_page=12)
+    return render_template('home.html', restaurants=restaurants)

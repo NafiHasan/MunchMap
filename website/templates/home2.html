@@ -151,7 +151,12 @@
     <div class="box-container">
       {% for food in foods.items %}
       <div class="box">
-        <button class="location-tag">{{ food.belong_to.location }}</button>
+        <a
+          href="{{ url_for('foods.search_by_location', location = food.belong_to.location) }}"
+          class="location-tag"
+        >
+          {{ food.belong_to.location }}
+        </a>
         <a href="{{ url_for('foods.food', food_id = food.id ) }}">
           <img
             src="{{ url_for('static', filename='profile_pics/' + food.image_file) }}"
@@ -198,6 +203,7 @@
     {% else %}
     <a
       class="btn btn-outline-info mb-4"
+      style="margin-top: 30px; margin-bottom: 80px"
       href="{{ url_for('main.home2', page=page_num) }}"
       >{{ page_num }}</a
     >

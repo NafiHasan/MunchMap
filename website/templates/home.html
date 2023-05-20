@@ -151,7 +151,13 @@
     <div class="box-container">
       {% for restaurant in restaurants.items %}
       <div class="box">
-        <button class="location-tag">{{ restaurant.location }}</button>
+        <a
+          href="{{ url_for('restaurants.search_by_location', location = restaurant.location) }}"
+          class="location-tag"
+        >
+          {{ restaurant.location }}
+        </a>
+        <!-- <button class="location-tag">{{ restaurant.location }}</button> -->
         <a
           href="{{ url_for('restaurants.restaurant', restaurant_id = restaurant.id ) }}"
         >
@@ -199,6 +205,7 @@
     {% else %}
     <a
       class="btn btn-outline-info mb-4"
+      style="margin-left: 500px; margin-top: 30px; margin-bottom: 80px"
       href="{{ url_for('main.home', page=page_num) }}"
       >{{ page_num }}</a
     >

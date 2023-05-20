@@ -136,3 +136,13 @@ def delete_food(food_id):
     db.session.commit()
     flash('The item has been deleted!', 'success')
     return redirect(url_for('restaurants.restaurant', restaurant_id=food.belong_to.id))
+
+
+@foods.route("/food/search-by-location/<string:location>")
+def search_by_location(location):
+    page = request.args.get('page', 1, type=int)
+    # restaurants = Restaurant.query.order_by(
+    # Restaurant.rating.desc()).paginate(page=page, per_page=12)
+    foods = Food.query.join(Restaurant).filter(
+        Restaurant.location == location).order_by(Food.rating.desc()).paginate(page=page, per_page=12)
+    return render_template('home2.html', foods=foods)
